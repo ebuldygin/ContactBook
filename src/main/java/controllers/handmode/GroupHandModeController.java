@@ -62,10 +62,10 @@ public class GroupHandModeController implements GroupController {
 
     private Collection<Group> getSubgroupsRecursiveP(Group parent) {
         Collection<Group> result = new ArrayList<>();
-        Collection<Group> children = parent.getSubGroups();
+        Collection<Group> children = parent.getSubgroups();
         for (Group group : children) {
             result.add(group);
-            if (!group.getSubGroups().isEmpty()) {
+            if (!group.getSubgroups().isEmpty()) {
                 result.addAll(getSubgroupsRecursiveP(group));
             }
         }
@@ -145,6 +145,9 @@ public class GroupHandModeController implements GroupController {
         try {
             group = em.find(Group.class, group.getId());
             group.setParent(null);
+            for (Person person : group.getPersons()) {
+                person.getGroups().remove(group);
+            }
             em.remove(group);
             em.getTransaction().commit();
         } catch (Exception e) {

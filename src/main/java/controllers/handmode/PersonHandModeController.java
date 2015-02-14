@@ -107,8 +107,8 @@ public class PersonHandModeController implements PersonController {
                 group = em.find(Group.class, group.getId());
             } else {
                 em.persist(group);
-            }
-            group.getPersons().add(person);
+            }    
+            person.getGroups().add(group);
             em.getTransaction().commit();
         } catch (Exception e) {
             log.log(Level.SEVERE, "", e);
@@ -133,7 +133,7 @@ public class PersonHandModeController implements PersonController {
             } else {
                 em.persist(group);
             }
-            group.getPersons().remove(person);
+            person.getGroups().remove(group);
             em.getTransaction().commit();
         } catch (Exception e) {
             log.log(Level.SEVERE, "", e);

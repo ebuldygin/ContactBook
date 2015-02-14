@@ -7,8 +7,6 @@ import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import controllers.GroupController;
 import controllers.PersonController;
-import controllers.guice.GroupGuiceController;
-import controllers.guice.PersonGuiceController;
 import controllers.transactional.GroupTransactionalController;
 import controllers.transactional.PersonTransactionalController;
 import controllers.handmode.GroupHandModeController;
@@ -22,8 +20,7 @@ public class TestModule {
 
     public static AbstractAllControllers testControllers() {
         //return getHandModeController();
-        //return getTransactionalController();
-        return getGuiceController();
+        return getTransactionalController();      
     }
 
     private static AbstractAllControllers getHandModeController() {
@@ -53,18 +50,5 @@ public class TestModule {
         };
         return Guice.createInjector(transactionalModule, new JpaPersistModule(persistenceUnitName))
                 .getInstance(TransactionalAllController.class);
-    }
-
-    private static AbstractAllControllers getGuiceController() {
-        Module transactionalModule = new AbstractModule() {
-
-            @Override
-            protected void configure() {
-                bind(GroupController.class).to(GroupGuiceController.class);
-                bind(PersonController.class).to(PersonGuiceController.class);
-            }
-        };
-        return Guice.createInjector(transactionalModule, new JpaPersistModule(persistenceUnitName))
-                .getInstance(TransactionalAllController.class);
-    }
+    }   
 }

@@ -45,7 +45,7 @@ public class Person implements Serializable {
     private String email;
     private boolean favorite;
     private String comment;
-    @ManyToMany(mappedBy = "persons")
+    @ManyToMany
     protected Set<Group> groups = new HashSet<>();
 
     public Set<Group> getGroups() {

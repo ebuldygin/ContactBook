@@ -8,8 +8,10 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -27,11 +29,12 @@ public class Group implements Serializable {
     @GeneratedValue
     private Long id;
     private String name;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Group parent;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
-    private Set<Group> subGroups = new HashSet<>();
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parent")
+    private Set<Group> subgroups = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
     private List<Person> persons = new ArrayList<>();
 
     public List<Person> getPersons() {
@@ -42,12 +45,12 @@ public class Group implements Serializable {
         this.persons = persons;
     }
 
-    public Set<Group> getSubGroups() {
-        return subGroups;
+    public Set<Group> getSubgroups() {
+        return subgroups;
     }
 
-    public void setSubGroups(Set<Group> subGroups) {
-        this.subGroups = subGroups;
+    public void setSubgroups(Set<Group> subGroups) {
+        this.subgroups = subgroups;
     }
 
     public Group getParent() {
@@ -118,7 +121,7 @@ public class Group implements Serializable {
         }
 
         public Builder subGroups(Set<Group> subGroups) {
-            this.item.subGroups = subGroups;
+            this.item.subgroups = subGroups;
             return this;
         }
 

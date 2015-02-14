@@ -9,6 +9,7 @@ import model.Group;
 import model.Person;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class PersonGroupRelationTest {
@@ -33,13 +34,26 @@ public class PersonGroupRelationTest {
     public void tearDown() {
         allCtrls.close();
     }
-
+    
+    @Test
+    public void removeGroupTest() {
+        Person p1 = new Person.Builder().name("Test 0").build();        
+        Group g1 = new Group.Builder().name("Group 0").build();   
+        
+        personCtrl.addPersonToGroup(p1, g1);        
+        /*
+        assertEquals(1, personCtrl.personsInGroup(g1).size());
+        assertEquals(1, personCtrl.groupsForPerson(p1).size());*/
+        groupCtrl.removeGroup(g1);
+        assertEquals(0, groupCtrl.getAllGroups().size());
+    }
+       
     @Test
     public void addRemovePersonToGroup() {
         Person p0 = new Person.Builder().name("Test 0").build();
         Person p1 = new Person.Builder().name("Test 1").build();
         Group g0 = new Group.Builder().name("Group 0").build();
-        Group g1 = new Group.Builder().name("Group 0").build();
+        Group g1 = new Group.Builder().name("Group 1").build();
         personCtrl.addPersonToGroup(p0, g0);
         personCtrl.createPerson(p1);
         assertEquals(1, personCtrl.personsInGroup(g0).size());
@@ -52,11 +66,12 @@ public class PersonGroupRelationTest {
         assertTrue(personCtrl.groupsForPerson(p0).isEmpty());
         // add person to groups
         personCtrl.addPersonToGroup(p1, g1);
-        personCtrl.addPersonToGroup(p1, g0);
+        personCtrl.addPersonToGroup(p1, g0);        
         assertEquals(1, personCtrl.personsInGroup(g1).size());
+        assertEquals(1, personCtrl.personsInGroup(g0).size());
         assertEquals(2, personCtrl.groupsForPerson(p1).size());
         groupCtrl.removeGroup(g1);
-        assertEquals(1, personCtrl.personsInGroup(g0).size());
+        assertEquals(1, groupCtrl.getAllGroups().size());        
         assertEquals(0, personCtrl.personsInGroup(g1).size());
         assertEquals(1, personCtrl.groupsForPerson(p1).size());
 
@@ -91,15 +106,14 @@ public class PersonGroupRelationTest {
         personCtrl.addPersonToGroup(p3, root010);
         personCtrl.addPersonToGroup(p0, root010);
 
-        // check creation
-        assertEquals(1, personCtrl.personsInGroup(root0).size());
-        assertEquals(2, personCtrl.personsInGroup(root010).size());
+        // check creation        
         assertEquals(2, personCtrl.groupsForPerson(p0).size());
 
-        // check counter
+        // check counter        
         assertEquals(0, groupCtrl.countPersonsInGroup(null));
-        assertEquals(4, groupCtrl.countPersonsInGroupRecursive(null));
-        assertEquals(1, groupCtrl.countPersonsInGroup(root0));
+        assertEquals(1, personCtrl.personsInGroup(root0).size());
+        assertEquals(2, personCtrl.personsInGroup(root010).size());
+        assertEquals(4, groupCtrl.countPersonsInGroupRecursive(null));        
         assertEquals(4, groupCtrl.countPersonsInGroupRecursive(root0));
 
         // remove

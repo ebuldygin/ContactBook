@@ -66,6 +66,7 @@ public class PersonTransactionalController implements PersonController {
         } else {
             em.persist(group);
         }
+        person.getGroups().add(group);
         group.getPersons().add(person);
     }
 
@@ -81,7 +82,8 @@ public class PersonTransactionalController implements PersonController {
             group = em.find(Group.class, group.getId());
         } else {
             em.persist(group);
-        }
+        }        
+        person.getGroups().remove(group);
         group.getPersons().remove(person);
     }
 
