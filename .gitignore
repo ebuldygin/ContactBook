@@ -1,0 +1,7 @@
+#mvn
+target/
+log/
+
+#derby db gens
+/test/
+*.log
